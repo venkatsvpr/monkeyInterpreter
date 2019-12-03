@@ -73,6 +73,18 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
+
+// integer literal
+type IntegerLiteral struct {
+	Value int64
+	Token token.Token
+}
+func (il *IntegerLiteral) expressionNode() {}
+func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
+}
+
 // return statement
 type ReturnStatement struct {
 	Token token.Token
@@ -106,3 +118,50 @@ func (es *ExpressionStatement) String() string {
 
 	return ""
 }
+
+// prefix expression
+type PrefixExpression struct {
+	Token token.Token
+	Operator string
+	Right Expression
+}
+
+func (ps *PrefixExpression) expressionNode() {}
+func (ps *PrefixExpression) TokenLiteral() string { return ps.Token.Literal }
+func (ps *PrefixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(ps.Operator)
+	out.WriteString(ps.Right.String())
+	out.WriteString(")")
+	return out.String()
+}
+
+// infix expression
+type InfixExpression struct {
+	Token token.Token
+	Left Expression
+	Operator string
+	Right Expression
+}
+
+func (ie *InfixExpression) expressionNode() {}
+func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *InfixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(ie.Left.String()+" "+ie.Operator+" "+ie.Right.String())
+	out.WriteString(")")
+	return out.String()
+}
+
+// boolean
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode() {}
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+func (b *Boolean) String() string { return b.Token.Literal }
+
